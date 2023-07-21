@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'com.hele.android_native_architecture'
-    compileSdk 33
+    namespace app_android.namespace
+    compileSdk app_android.compileSdk
 
     defaultConfig {
-        applicationId "com.hele.android_native_architecture"
-        minSdk 24
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        applicationId app_android.applicationId
+        minSdk app_android.minSdk
+        targetSdk app_android.targetSdk
+        versionCode app_android.versionCode
+        versionName app_android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
     buildFeatures {
         compose true
@@ -48,14 +48,15 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.5.1'
-    implementation platform('androidx.compose:compose-bom:2022.10.00')
-    implementation 'androidx.compose.ui:ui'
-    implementation 'androidx.compose.ui:ui-graphics'
-    implementation 'androidx.compose.ui:ui-tooling-preview'
-    implementation 'androidx.compose.material3:material3'
+    implementation app_impl.core
+    implementation app_impl.lifecycle
+    implementation app_impl.compose_activity
+    implementation platform(app_impl.compose_bom)
+    implementation app_impl.compose_ui
+    implementation app_impl.compose_ui_graphics
+    implementation app_impl.compose_ui_preview
+    implementation app_impl.material3
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
