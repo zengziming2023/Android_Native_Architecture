@@ -13,6 +13,7 @@ ext {
     ]
 
     // 第三方依赖
+    def lifecycle_version = "2.6.1"
 
     app_impl = [
             core               : 'androidx.core:core-ktx:1.8.0',
@@ -23,7 +24,9 @@ ext {
             compose_ui_graphics: 'androidx.compose.ui:ui-graphics',
             compose_ui_preview : 'androidx.compose.ui:ui-tooling-preview',
             material3          : 'androidx.compose.material3:material3',
-
+            appcompat          : 'androidx.appcompat:appcompat:1.4.1',
+            material           : 'com.google.android.material:material:1.5.0',
+            viewmodel_ktx      : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
 
     ]
 
