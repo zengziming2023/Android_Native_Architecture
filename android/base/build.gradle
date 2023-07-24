@@ -36,10 +36,11 @@ android {
 
 dependencies {
 
-    implementation app_impl.core
-    implementation app_impl.appcompat
-    implementation app_impl.material
-    implementation app_impl.viewmodel_ktx
+    implementation(app_impl.core)
+    implementation(app_impl.appcompat)
+    implementation(app_impl.material)
+    implementation(app_impl.viewmodel_ktx)
+    implementation(app_impl.fragivity)
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

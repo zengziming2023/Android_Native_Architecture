@@ -14,7 +14,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
         parameterizedType.actualTypeArguments
     }
 
-    protected val mViewBinging: VB by lazy {
+    protected val mViewBinding: VB by lazy {
         (types[0] as Class<*>).getMethod("inflate").invoke(null, layoutInflater) as VB
     }
 
@@ -24,7 +24,7 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(mViewBinging.root)
+        setContentView(mViewBinding.root)
         setUpView()
         applyViewModel()
 
