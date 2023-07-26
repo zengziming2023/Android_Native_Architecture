@@ -1,6 +1,13 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
 }
 
 android {
@@ -61,6 +68,9 @@ dependencies {
     implementation app_impl.compose_ui_graphics
     implementation app_impl.compose_ui_preview
     implementation app_impl.material3
+    implementation app_impl.arouter_api
+    kapt app_impl.arouter_compiler
+    implementation(project(":base"))
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
