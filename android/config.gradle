@@ -14,6 +14,7 @@ ext {
 
     // 第三方依赖
     def lifecycle_version = "2.6.1"
+    def retrofit_version = "2.9.0"
 
     app_impl = [
             core               : 'androidx.core:core-ktx:1.8.0',
@@ -30,7 +31,10 @@ ext {
             fragivity          : 'com.github.vitaviva.fragivity:core:0.3.1',
 
             arouter_api        : 'com.alibaba:arouter-api:1.5.2',
-            arouter_compiler   : 'com.alibaba:arouter-compiler:1.5.2'
+            arouter_compiler   : 'com.alibaba:arouter-compiler:1.5.2',
+
+            retrofit           : "com.squareup.retrofit2:retrofit:$retrofit_version",
+            converterGson      : "com.squareup.retrofit2:converter-gson:$retrofit_version",
 
     ]
 
