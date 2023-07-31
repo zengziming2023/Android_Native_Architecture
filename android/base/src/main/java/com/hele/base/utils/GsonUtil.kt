@@ -1,5 +1,6 @@
 package com.hele.base.utils
 
+import androidx.annotation.Keep
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
