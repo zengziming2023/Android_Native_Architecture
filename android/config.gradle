@@ -17,6 +17,7 @@ ext {
     def retrofit_version = "2.9.0"
 
     app_impl = [
+            activity           : 'androidx.activity:activity:1.5.1',
             core               : 'androidx.core:core-ktx:1.8.0',
             lifecycle          : 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1',
             compose_activity   : 'androidx.activity:activity-compose:1.5.1',
