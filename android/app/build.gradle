@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+//    id 'cc-register'
 }
 
 kapt {
@@ -49,9 +50,7 @@ android {
     kotlinOptions {
         jvmTarget = '11'
     }
-    buildFeatures {
-        compose true
-    }
+
     composeOptions {
         kotlinCompilerExtensionVersion '1.3.2'
     }
@@ -61,8 +60,10 @@ android {
         }
     }
     buildFeatures {
+        compose true
         viewBinding true
         dataBinding true
+        buildConfig true
     }
 
     configurations {
@@ -93,6 +94,8 @@ dependencies {
     kapt app_impl.arouter_compiler
 
     kapt app_impl.room_compiler
+
+    implementation app_impl.cc
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

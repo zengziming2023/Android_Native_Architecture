@@ -8,6 +8,16 @@ pluginManagement {
             url 'https://maven.aliyun.com/nexus/content/repositories/releases/'
         }
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
+        jcenter()
+
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == 'cc-register') {
+                useModule("com.billy.android:cc-register:1.1.2")
+            }
+        }
     }
 }
 dependencyResolutionManagement {
@@ -20,6 +30,8 @@ dependencyResolutionManagement {
             url 'https://maven.aliyun.com/nexus/content/repositories/releases/'
         }
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
+        jcenter()
+
     }
 }
 rootProject.name = "Android_native_architecture"
