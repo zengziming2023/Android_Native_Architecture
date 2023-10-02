@@ -1,5 +1,10 @@
 pluginManagement {
     repositories {
+        maven {
+            allowInsecureProtocol(true)
+            url uri('./repos')
+        }
+
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -9,6 +14,10 @@ pluginManagement {
         }
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+
 
     }
 
@@ -17,12 +26,20 @@ pluginManagement {
             if (requested.id.id == 'cc-register') {
                 useModule("com.billy.android:cc-register:1.1.2")
             }
+            if(requested.id.id == 'com.dorongold.task-tree') {
+                useModule("gradle.plugin.com.dorongold.plugins:task-tree:1.5")
+            }
         }
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven {
+            allowInsecureProtocol(true)
+            url uri('./repos')
+        }
+
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
@@ -31,9 +48,14 @@ dependencyResolutionManagement {
         }
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+
 
     }
 }
 rootProject.name = "Android_native_architecture"
 include ':app'
 include ':base'
+include ':plugin_test'

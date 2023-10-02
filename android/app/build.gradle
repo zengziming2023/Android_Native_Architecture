@@ -3,6 +3,8 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
 //    id 'cc-register'
+    id 'com.hele.testplugin'
+//    id 'com.dorongold.task-tree'
 }
 
 kapt {
@@ -105,3 +107,5 @@ dependencies {
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
 }
+
+

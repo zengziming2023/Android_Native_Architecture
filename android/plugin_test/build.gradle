@@ -1,0 +1,28 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+}
+dependencies {
+    //gradle sdk
+    implementation gradleApi()
+    //groovy sdk
+    implementation localGroovy()
+}
+
+publishing {
+    // 定义发布什么
+    publications {
+        plugin(MavenPublication) {
+            groupId = "com.hele.testplugin"
+            artifactId = 'TestPlugin'
+            version = '1.0.0'
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = 'repos'
+            url = "../repos"
+        }
+    }
+}
