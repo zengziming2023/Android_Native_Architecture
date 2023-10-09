@@ -45,6 +45,9 @@ ext {
             room_compiler      : "androidx.room:room-compiler:$room_version",
 
             cc                 : "com.billy.android:cc:2.1.5",
+
+            autosize           : 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1',
+
     ]
 
 }
