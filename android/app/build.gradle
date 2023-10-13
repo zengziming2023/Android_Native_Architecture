@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
 //    id 'cc-register'
-    id 'com.hele.testplugin'
+//    id 'com.hele.testplugin'
 //    id 'com.dorongold.task-tree'
 }
 
@@ -98,6 +98,8 @@ dependencies {
     kapt app_impl.room_compiler
 
     implementation app_impl.cc
+
+    kapt app_impl.epoxyKapt
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

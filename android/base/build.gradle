@@ -62,6 +62,9 @@ dependencies {
 
     api(app_impl.autosize)
 
+    api(app_impl.epoxy)
+    api(app_impl.epoxyDatabinding)
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
