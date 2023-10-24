@@ -21,16 +21,16 @@ interface UserDao {
     suspend fun findUser(): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(user: User?): Long
+    suspend fun insert(user: User): Long
 
     @Delete
-    suspend fun delete(vararg user: User?): Int
+    suspend fun delete(vararg user: User): Int
 
     @Query("DELETE FROM user WHERE 'id' == (:id)")
     suspend fun deleteById(id: Int): Int
 
     @Update
-    suspend fun update(vararg user: User?): Int
+    suspend fun update(vararg user: User): Int
 
     @Query("DELETE FROM user")
     suspend fun deleteAllUser(): Int
