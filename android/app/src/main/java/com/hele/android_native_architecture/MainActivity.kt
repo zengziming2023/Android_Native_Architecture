@@ -1,7 +1,6 @@
 package com.hele.android_native_architecture
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.billy.cc.core.component.CC
-import com.billy.cc.core.component.CCResult
-import com.hele.android_native_architecture.cc.ComponentTest
+import com.elvishew.xlog.XLog
 import com.hele.android_native_architecture.ui.theme.Android_native_architectureTheme
 
 class MainActivity : ComponentActivity() {
@@ -52,7 +50,7 @@ class MainActivity : ComponentActivity() {
 //            .addParam()   // 入参
             .build().callAsync { cc, result ->
                 // 回调在子线程中
-                Log.d("", "$result")
+                XLog.d("", "$result")
             }
 
         // 异步调用，主线程回调
@@ -60,7 +58,7 @@ class MainActivity : ComponentActivity() {
             .setActionName("toast")
 //            .addParams()
             .build().callAsyncCallbackOnMainThread { cc, result ->
-                Log.d("", "$result")
+                XLog.d("", "$result")
             }
     }
 }
