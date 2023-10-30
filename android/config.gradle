@@ -54,7 +54,9 @@ ext {
             epoxyKapt          : "com.airbnb.android:epoxy-processor:$epoxy_version",
             epoxyDatabinding   : "com.airbnb.android:epoxy-databinding:$epoxy_version",
 
-            xlog               : "com.elvishew:xlog:1.11.0"
+            xlog               : "com.elvishew:xlog:1.11.0",
+
+            epic               : "com.github.tiann:epic:0.11.2"
     ]
 
 }
