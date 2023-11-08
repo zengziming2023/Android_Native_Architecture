@@ -67,6 +67,8 @@ dependencies {
 
     api(app_impl.xlog)
 
+    api(app_impl.kotlin_reflect)
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

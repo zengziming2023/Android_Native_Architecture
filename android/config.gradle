@@ -56,7 +56,9 @@ ext {
 
             xlog               : "com.elvishew:xlog:1.11.0",
 
-            epic               : "com.github.tiann:epic:0.11.2"
+            epic               : "com.github.tiann:epic:0.11.2",
+
+            kotlin_reflect : "org.jetbrains.kotlin:kotlin-reflect:1.9.20"
     ]
 
 }
