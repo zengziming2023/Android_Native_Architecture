@@ -58,7 +58,9 @@ ext {
 
             epic               : "com.github.tiann:epic:0.11.2",
 
-            kotlin_reflect : "org.jetbrains.kotlin:kotlin-reflect:1.9.20"
+            kotlin_reflect     : "org.jetbrains.kotlin:kotlin-reflect:1.9.20",
+
+            koin               : "io.insert-koin:koin-android:3.5.0",
     ]
 
 }
