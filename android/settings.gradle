@@ -5,19 +5,33 @@ pluginManagement {
             url uri('./repos')
         }
 
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url 'https://jitpack.io' }
         maven {
-            url 'https://maven.aliyun.com/nexus/content/repositories/releases/'
+            url 'https://maven.aliyun.com/repository/central'
         }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/jcenter'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/releases'
+        }
+
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
         jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
 
     }
 
@@ -40,22 +54,38 @@ dependencyResolutionManagement {
             url uri('./repos')
         }
 
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
         maven {
-            url 'https://maven.aliyun.com/nexus/content/repositories/releases/'
+            url 'https://maven.aliyun.com/repository/central'
         }
+        maven {
+            url 'https://maven.aliyun.com/repository/google'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/gradle-plugin'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/jcenter'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/releases'
+        }
+
         maven { url "https://s01.oss.sonatype.org/content/groups/public" }
         jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
 
     }
 }
 rootProject.name = "Android_native_architecture"
 include ':app'
 include ':base'
-include ':plugin_test'
+//include ':plugin_test'
+include ':webview'

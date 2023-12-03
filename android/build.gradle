@@ -2,7 +2,7 @@
 buildscript {
     dependencies {
         classpath "com.billy.android:cc-register:1.1.2"
-        classpath "com.hele.testplugin:TestPlugin:1.0.0"
+//        classpath "com.hele.testplugin:TestPlugin:1.0.0"
         classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.5"   // 查看gradle task 关系树
     }
 }
