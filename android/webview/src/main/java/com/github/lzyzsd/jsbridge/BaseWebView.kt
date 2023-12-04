@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import com.elvishew.xlog.XLog
 import com.hele.base.utils.GsonUtil
+import com.hele.webview.cache.WebViewCacheHolder
 import com.hele.webview.h5process.H5ToMainAidlManager
 import com.tencent.smtt.sdk.WebView
 import org.json.JSONObject
@@ -177,7 +178,7 @@ class BaseWebView : WebView, WebViewJavascriptBridge, IWebView,
         webViewClient = null
         clearHistory()
         (parent as? ViewGroup)?.removeView(this)
-
+        WebViewCacheHolder.recycleWebView(this)
     }
 
 }
