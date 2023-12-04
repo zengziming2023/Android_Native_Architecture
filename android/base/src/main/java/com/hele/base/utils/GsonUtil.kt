@@ -9,7 +9,7 @@ object GsonUtil {
         Gson()
     }
 
-    fun toJson(src: Any) = gson.toJson(src)
+    fun toJson(src: Any?): String = gson.toJson(src)
 
     fun <T> fromJson(src: String): T {
         val type = object : TypeToken<T>() {}.type

@@ -1,6 +1,6 @@
 package com.hele.webview.commands
 
-import android.webkit.WebView
+import com.github.lzyzsd.jsbridge.BaseWebView
 import com.hele.webview.ICallbackFromMainToH5
 import com.hele.webview.h5process.H5ToMainAidlManager
 import java.lang.ref.WeakReference
@@ -30,7 +30,7 @@ internal object CommandsManager {
         commandName: String,
         jsonParam: String?,
         callbackId: String?,
-        webViewRef: WeakReference<WebView>
+        webViewRef: WeakReference<BaseWebView>
     ) {
         commandsMap[commandName]?.let { handler ->
             val callback = generalCallback(callbackId, webViewRef)
@@ -44,7 +44,7 @@ internal object CommandsManager {
 
     private fun generalCallback(
         callbackId: String?,
-        webViewRef: WeakReference<WebView>
+        webViewRef: WeakReference<BaseWebView>
     ): ICallbackFromMainToH5? {
         return callbackId?.let {
             object : ICallbackFromMainToH5.Stub() {
