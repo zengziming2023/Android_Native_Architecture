@@ -1,8 +1,8 @@
-package com.hele.webview.h5process
+package com.hele.webview.commands
 
 import android.webkit.WebView
 import com.hele.webview.ICallbackFromMainToH5
-import com.hele.webview.commands.ICommandHandler
+import com.hele.webview.h5process.H5ToMainAidlManager
 import java.lang.ref.WeakReference
 import java.util.ServiceLoader
 
@@ -49,7 +49,7 @@ internal object CommandsManager {
         return callbackId?.let {
             object : ICallbackFromMainToH5.Stub() {
                 override fun onResult(response: String?, closeH5Container: Boolean) {
-
+                    // TODO: send result to js.
                 }
 
                 override fun getCallbackId(): String = it

@@ -25,9 +25,9 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".h5.H5BrowserActivity"-->
-<!--            android:process=":h5" />-->
+        <activity
+            android:name=".h5.H5BrowserActivity"
+            android:process=":h5" />
     </application>
 
 </manifest>
