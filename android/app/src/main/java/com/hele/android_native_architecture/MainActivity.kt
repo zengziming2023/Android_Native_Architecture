@@ -13,8 +13,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.billy.cc.core.component.CC
 import com.elvishew.xlog.XLog
+import com.hele.android_native_architecture.plugin.TestPlugin
 import com.hele.android_native_architecture.ui.theme.Android_native_architectureTheme
 import com.hele.android_native_architecture.viewmodel.MainViewModel
+import com.hele.base.annotation.TraceMethod
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -27,6 +29,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val mainViewModule: MainViewModel by inject()
 
+    @TraceMethod
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -39,6 +42,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        TestPlugin.test()
 
         testCC()
 

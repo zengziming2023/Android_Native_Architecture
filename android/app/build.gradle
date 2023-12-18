@@ -5,12 +5,18 @@ plugins {
 //    id 'cc-register'
 //    id 'com.hele.testplugin'
 //    id 'com.dorongold.task-tree'
+    id 'PluginTemplate'
 }
 
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
     }
+}
+
+pluginExtension {
+    enable true
+    include += ["com.hele"]
 }
 
 android {

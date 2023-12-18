@@ -1,0 +1,55 @@
+plugins {
+    id 'kotlin'
+    id 'groovy'
+    id 'maven-publish'
+    id 'java-gradle-plugin'
+    id 'org.jetbrains.kotlin.jvm'
+}
+
+dependencies {
+    implementation(gradleApi())
+    implementation(localGroovy())
+
+    compileOnly("com.android.tools.build:gradle:8.0.1")
+
+    implementation(plugin.asm)
+    implementation(plugin.asmUtil)
+    implementation(plugin.asmCommons)
+
+}
+
+gradlePlugin {
+    plugins {
+        template {
+            id = 'PluginTemplate'
+            implementationClass = 'com.hele.plugin_template.TemplatePlugin'
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                groupId = MAVEN_GROUPID
+                artifactId = MAVEN_ARTIFACTID
+                version = VERSION_NAME
+                from components.java
+            }
+
+            debug(MavenPublication) {
+                groupId = MAVEN_GROUPID
+                artifactId = MAVEN_ARTIFACTID
+                version = "${VERSION_NAME}-SNAPSHOT"
+                from components.java
+            }
+        }
+
+        repositories {
+            maven {
+                name = 'localMaven'
+                url = '../localMaven'
+            }
+        }
+    }
+}

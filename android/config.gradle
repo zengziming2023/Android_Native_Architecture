@@ -74,4 +74,10 @@ ext {
             jsBridge           : "com.github.lzyzsd:jsbridge:2.0.0",
     ]
 
+    plugin = [
+            asm       : 'org.ow2.asm:asm:9.2',
+            asmUtil   : 'org.ow2.asm:asm-util:9.2',
+            asmCommons: 'org.ow2.asm:asm-commons:9.2'
+    ]
+
 }
