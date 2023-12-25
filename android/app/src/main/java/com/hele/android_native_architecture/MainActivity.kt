@@ -17,6 +17,7 @@ import com.hele.android_native_architecture.plugin.TestPlugin
 import com.hele.android_native_architecture.ui.theme.Android_native_architectureTheme
 import com.hele.android_native_architecture.viewmodel.MainViewModel
 import com.hele.base.annotation.TraceMethod
+import com.hele.base.utils.LoginUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        TestPlugin.test()
+        testPlugin()
 
         testCC()
 
@@ -114,6 +115,16 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+    }
+
+    private fun testPlugin() {
+        TestPlugin.test()
+
+        TestPlugin.testLoginRequest()
+        LoginUtil.login()
+        TestPlugin.testAfterLogin("has login: go go go..")
+
+        TestPlugin.testThread()
     }
 
     private fun testCC() {

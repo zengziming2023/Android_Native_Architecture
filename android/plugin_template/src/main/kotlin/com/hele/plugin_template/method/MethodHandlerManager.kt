@@ -9,7 +9,8 @@ object MethodHandlerManager {
 
     private val methodHandlerMap by lazy {
         mapOf(
-            TraceMethodHandler.MATCH_ANNOTATION to TraceMethodHandler::class
+            TraceMethodHandler.MATCH_ANNOTATION to TraceMethodHandler::class,
+            RequestLoginMethodHandler.MATCH_ANNOTATION to RequestLoginMethodHandler::class
         )
     }
 

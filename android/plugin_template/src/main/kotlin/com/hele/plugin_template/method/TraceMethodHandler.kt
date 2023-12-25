@@ -1,8 +1,10 @@
 package com.hele.plugin_template.method
 
 import com.hele.plugin_template.base.TemplateAdviceAdapter
+import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.GETSTATIC
 import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
+import org.objectweb.asm.commons.AdviceAdapter
 
 
 class TraceMethodHandler(methodVisitor: TemplateAdviceAdapter, parent: BaseMethodHandler?) :
@@ -15,8 +17,13 @@ class TraceMethodHandler(methodVisitor: TemplateAdviceAdapter, parent: BaseMetho
         return MATCH_ANNOTATION == descriptor
     }
 
-    override fun onMethodEnter() {
-        super.onMethodEnter()
+    override fun onMethodEnter(
+        visitor: MethodVisitor,
+        access: Int,
+        name: String?,
+        descriptor: String?
+    ) {
+        super.onMethodEnter(visitor, access, name, descriptor)
         methodVisitor.visitFieldInsn(
             GETSTATIC,
             "com/hele/android_native_architecture/plugin/TraceMethodManager",
@@ -32,8 +39,13 @@ class TraceMethodHandler(methodVisitor: TemplateAdviceAdapter, parent: BaseMetho
         )
     }
 
-    override fun onMethodExit(opcode: Int) {
-        super.onMethodExit(opcode)
+    override fun onMethodExit(
+        opcode: Int, visitor: MethodVisitor,
+        access: Int,
+        name: String?,
+        descriptor: String?
+    ) {
+        super.onMethodExit(opcode, visitor, access, name, descriptor)
         methodVisitor.visitFieldInsn(
             GETSTATIC,
             "com/hele/android_native_architecture/plugin/TraceMethodManager",

@@ -16,7 +16,7 @@ class MyApp : BaseApplication() {
     override fun getTasks(): List<Task>? {
         return listOf(
             CCTask(),
-            EpicTask(),
+//            EpicTask(),
             KoinTask(),
             LoadSirTask()
         )
