@@ -16,7 +16,7 @@ kapt {
 
 pluginExtension {
     enable true
-    include += ["com.hele"]
+    include += ["com.hele.android_native_architecture"]
 }
 
 android {

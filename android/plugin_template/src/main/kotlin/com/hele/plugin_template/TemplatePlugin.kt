@@ -4,14 +4,17 @@ import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.api.variant.AndroidComponentsExtension
 import com.hele.plugin_template.base.TemplateASMFactory
+import com.hele.plugin_template.base.TemplateNodeASMFactory
 import com.hele.plugin_template.extension.TemplateExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 
 class TemplatePlugin : Plugin<Project> {
     companion object {
         var pluginExtension = TemplateExtension()
+        var pathClassesWithAsm: String? = null
         fun getASMVersion(): Int {
             return when (pluginExtension.asmVersion) {
                 "ASM6" -> Opcodes.ASM6
@@ -36,6 +39,10 @@ class TemplatePlugin : Plugin<Project> {
                     TemplateASMFactory::class.java,
                     InstrumentationScope.PROJECT
                 ) {}
+                transformClassesWith(
+                    TemplateNodeASMFactory::class.java,
+                    InstrumentationScope.PROJECT
+                ) {}
                 setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
             }
 
@@ -43,6 +50,17 @@ class TemplatePlugin : Plugin<Project> {
 
         project.afterEvaluate {
             println("pluginExtension = $pluginExtension")
+            it.tasks.firstOrNull {
+                it.name.contains("ClassesWithAsm")
+            }?.let {
+                pathClassesWithAsm = it.outputs.files.firstOrNull {
+                    it.path.endsWith("dirs", true)
+                }?.path
+                println("pathClassesWithAsm = $pathClassesWithAsm")
+            } ?: kotlin.run {
+                println("pathClassesWithAsm error..")
+
+            }
         }
 
 //        project.tasks.register("myCustomTask") {

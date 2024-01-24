@@ -10,8 +10,7 @@ import org.objectweb.asm.ClassVisitor
 abstract class TemplateASMFactory : AsmClassVisitorFactory<InstrumentationParameters.None> {
 
     override fun createClassVisitor(
-        classContext: ClassContext,
-        nextClassVisitor: ClassVisitor
+        classContext: ClassContext, nextClassVisitor: ClassVisitor
     ): ClassVisitor {
         return TemplateClassVisitor(nextClassVisitor)
     }

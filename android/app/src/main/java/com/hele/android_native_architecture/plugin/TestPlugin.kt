@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import com.elvishew.xlog.XLog
 import com.hele.base.annotation.RequestLogin
 import com.hele.base.annotation.TraceMethod
+import com.hele.base.utils.requestLogin
 
 @Keep
 object TestPlugin {
@@ -13,18 +14,37 @@ object TestPlugin {
     @TraceMethod
     fun test() {
 //        TraceMethodManager.traceMethodStart()
+        printlnStart()
         XLog.d("test log.")
+        printlnEnd()
 //        TraceMethodManager.traceMethodEnd()
+    }
+
+    private fun printlnStart() {
+        println("method start")
+    }
+
+    private fun printlnEnd() {
+        println("method end")
     }
 
     @RequestLogin
     fun testLoginRequest() {
 //        requestLogin {
-        XLog.d("before login")
+        testLambda {
+            XLog.d("before login")
+            XLog.d("testLoginRequest")
+        }
+
+
 //        }
     }
 
-    @RequestLogin
+    fun testLambda(funC: () -> Unit) {
+        requestLogin(funC)
+    }
+
+    //    @RequestLogin
     fun testAfterLogin(message: String) {
         XLog.d(("have login, do something, message:$message"))
     }
@@ -38,6 +58,17 @@ object TestPlugin {
         Thread {
             XLog.d("new thread start..")
         }.start()
+    }
+
+    fun testLambda(age: Int, name: String) {
+        val funC = {
+            testLambdaSecond(age, name)
+        }
+        funC.invoke()
+    }
+
+    fun testLambdaSecond(age: Int, name: String) {
+        println("age = $age, name = $name")
     }
 }
 

@@ -26,4 +26,13 @@ abstract class BaseMethodHandler(
     ) {
         parent?.onMethodExit(opcode, visitor, access, name, descriptor)
     }
+
+    open fun visiitCode(
+        orgMethodVisitor: MethodVisitor,
+        access: Int,
+        name: String?,
+        descriptor: String?
+    ) {
+        parent?.visiitCode(orgMethodVisitor, access, name, descriptor)
+    }
 }

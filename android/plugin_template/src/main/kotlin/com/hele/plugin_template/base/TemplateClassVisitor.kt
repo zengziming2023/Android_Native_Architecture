@@ -8,6 +8,7 @@ import com.hele.plugin_template.method.SuperClassMethodVisitor
 import com.hele.plugin_template.super_class.SuperClassReplace
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.commons.AdviceAdapter
 
@@ -55,7 +56,6 @@ class TemplateClassVisitor(nextClassVisitor: ClassVisitor) : ClassVisitor(
         }
 
         return TemplateAdviceAdapter(visitor, access, name, descriptor)
-
     }
 }
 
@@ -79,6 +79,7 @@ class TemplateAdviceAdapter(
 
     override fun visitCode() {
         super.visitCode()
+        methodHandler?.visiitCode(orgMethodVisitor, access, name, descriptor)
     }
 
     override fun onMethodEnter() {

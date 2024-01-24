@@ -14,10 +14,20 @@ object LoginUtil {
         // TODO : login logic
         isLogin = true
     }
+
+    @Keep
+    fun requestLogin2(block: () -> Unit) {
+        XLog.d("requestLogin2 $block")
+        val c = {
+
+        }
+    }
 }
+
 
 @Keep
 fun requestLogin(block: () -> Unit) {
+    XLog.d("requestLogin: $block")
     if (LoginUtil.isLogin()) {
         block()
     } else {
