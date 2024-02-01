@@ -1,6 +1,5 @@
 package com.hele.plugin_template.test
 
-import com.android.tools.r8.internal.mv
 import groovyjarjarasm.asm.ClassWriter.COMPUTE_FRAMES
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
@@ -108,7 +107,7 @@ class TestNodeClassVisitor(
         it: AbstractInsnNode?
     ) {
         val innerClazzName = "$clazzName\$Inner${methodNode.name}"
-        println("inner class construct desc = (${methodNode.localVariables[0].desc})V")
+//        println("inner class construct desc = (${methodNode.localVariables[0].desc})V")
         println("inner class desc = L$innerClazzName;")
         // 创建内部类实例，差把他赋值给一个入参
         val tailInsns = InsnList().apply {

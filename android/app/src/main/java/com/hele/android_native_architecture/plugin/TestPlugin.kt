@@ -44,7 +44,7 @@ object TestPlugin {
         requestLogin(funC)
     }
 
-    //    @RequestLogin
+    @RequestLogin
     fun testAfterLogin(message: String) {
         XLog.d(("have login, do something, message:$message"))
     }

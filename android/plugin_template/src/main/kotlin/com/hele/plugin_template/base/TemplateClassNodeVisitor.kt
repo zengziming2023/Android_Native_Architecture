@@ -1,6 +1,9 @@
 package com.hele.plugin_template.base
 
 import com.hele.plugin_template.TemplatePlugin
+import com.hele.plugin_template.extension.getLoadType
+import com.hele.plugin_template.extension.getLocalVarName
+import com.hele.plugin_template.extension.getReplaceMethodName
 import com.hele.plugin_template.test.saveByteArrayToFile
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
@@ -9,6 +12,11 @@ import org.objectweb.asm.ClassWriter.COMPUTE_MAXS
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
+import org.objectweb.asm.Opcodes.ACC_BRIDGE
+import org.objectweb.asm.Opcodes.ACC_FINAL
+import org.objectweb.asm.Opcodes.ACC_PUBLIC
+import org.objectweb.asm.Opcodes.ACC_SUPER
+import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
 import org.objectweb.asm.tree.AbstractInsnNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
@@ -23,6 +31,7 @@ import org.objectweb.asm.tree.VarInsnNode
 
 class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
     ClassNode(TemplatePlugin.getASMVersion()) {
+
     private var clazzName: String = ""
     override fun visit(
         version: Int,
@@ -64,15 +73,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 
         // clear method body for myMethod method
         methods.filter {
-            if (it.name == "testLoginRequest") {
-                println(
-                    "${it.name}, invisibleAnnotations = ${
-                        it.invisibleAnnotations?.map {
-                            it.desc
-                        }?.joinToString()
-                    }"
-                )
-            }
+            // find target method by annotation info.
             it.invisibleAnnotations?.any {
                 it.desc == "Lcom/hele/base/annotation/RequestLogin;"
             } ?: false
@@ -109,28 +110,37 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
         methodNode: MethodNode, it: AbstractInsnNode?
     ) {
         val innerClazzName = "$clazzName\$Inner${methodNode.name}"
-        println("inner class construct desc = (${methodNode.localVariables[0].desc})V")
+        val constructorDesc = "(${
+            methodNode.localVariables?.joinToString("") {
+                it.desc
+            }.orEmpty()
+        })V"
+        println("inner class construct desc = $constructorDesc")
         println("inner class desc = L$innerClazzName;")
         // 创建内部类实例，差把他赋值给一个入参
         val tailInsns = InsnList().apply {
             // // "L$clazzName\$Inner${methodNode.name};"
             add(TypeInsnNode(Opcodes.NEW, innerClazzName))
             add(InsnNode(Opcodes.DUP))
-            add(VarInsnNode(Opcodes.ALOAD, 0))
+            methodNode.localVariables?.forEachIndexed { index, localVariableNode ->
+                add(VarInsnNode(localVariableNode.getLoadType(), index))
+            }
             // TODO: 8. 加载的入参 + 构造函数的 desc 需要重新处理一下
             add(
                 MethodInsnNode(
                     Opcodes.INVOKESPECIAL,
                     innerClazzName,
                     "<init>",
-                    "(${methodNode.localVariables[0].desc})V",
+                    constructorDesc,
                 )
             )
 
+            val localVarInnerClazz = methodNode.localVariables?.size ?: 0
+            println("localVarInnerClazz = $localVarInnerClazz")
             // TODO: 9. 保存到第几个本地变量中，这理论上需要计算
-            add(VarInsnNode(Opcodes.ASTORE, 1))
+            add(VarInsnNode(Opcodes.ASTORE, localVarInnerClazz))
             add(VarInsnNode(Opcodes.ALOAD, 0))
-            add(VarInsnNode(Opcodes.ALOAD, 1))
+            add(VarInsnNode(Opcodes.ALOAD, localVarInnerClazz))
 
             // TODO: 10. 这里应该需要外部配置，
             add(
@@ -146,8 +156,8 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
         methodNode.instructions.insertBefore(it, tailInsns)
 
         // TODO: 11. maxStack maxLocals 可以自动计算吗？
-        methodNode.maxStack = 3
-        methodNode.maxLocals = 2
+//        methodNode.maxStack = 3
+//        methodNode.maxLocals = 2
     }
 
     /**
@@ -156,8 +166,8 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
     private fun createReplaceMethod(methodNode: MethodNode) {
         methods.add(MethodNode(
             api,
-            Opcodes.ACC_PUBLIC,
-            "${methodNode.name}_hele",
+            ACC_PUBLIC,
+            methodNode.getReplaceMethodName(),
             methodNode.desc,
             methodNode.signature,
             methodNode.exceptions.toTypedArray()
@@ -169,15 +179,15 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
     }
 
     private fun generateInnerClazz(methodNode: MethodNode) {
-        val clazzThis = methodNode.localVariables[0]
-        val clazzDesc = clazzThis.desc
-
-        println("clazzName = $clazzName, clazzDesc = $clazzDesc")
+//        val clazzThis = methodNode.localVariables[0]
+//        val clazzDesc = clazzThis.desc
+//
+//        println("clazzName = $clazzName, clazzDesc = $clazzDesc")
 
         val innerClazzName = "$clazzName\$Inner${methodNode.name}"
 
         val innerClass = InnerClassNode(
-            innerClazzName, clazzName, methodNode.name, Opcodes.ACC_PUBLIC
+            innerClazzName, clazzName, methodNode.name, ACC_PUBLIC
         )
         // 添加内部类到外部类的 InnerClasses 属性 -- 把内部类跟外部类关联起来，这个很关键
         classVisitor?.visitInnerClass(
@@ -186,64 +196,106 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 
         // 创建内部类
         val innerClassNode = ClassNode(api).apply {
-            access = Opcodes.ACC_PUBLIC + Opcodes.ACC_FINAL + Opcodes.ACC_SUPER
+            access = ACC_PUBLIC + ACC_FINAL + ACC_SUPER
             name = innerClazzName
             superName = "java/lang/Object"
             interfaces = arrayOf("kotlin/jvm/functions/Function0").toMutableList()
             version = this@TemplateClassNodeVisitor.version
         }
         // 创建对应的属性
-        innerClassNode.fields.add(
-            FieldNode(
-                Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL, "outerClazz", clazzDesc, null, null
-            )
-        )
+//        innerClassNode.fields.add(
+//            FieldNode(
+//                Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL, "outerClazz", clazzDesc, null, null
+//            )
+//        )
         // TODO: 1. 需要根据methodNode的入参，创建对应内部类的属性
         // TODO: 2. 需要判断methodNode的acces，如果是static的话，则不需要创建outerClazz
         // TODO: 3. 构造函数的签名，需要根据方法入参来拼接
 
+        methodNode.localVariables?.forEach {
+            innerClassNode.fields.add(
+                FieldNode(
+                    Opcodes.ACC_PRIVATE + ACC_FINAL,
+                    it.getLocalVarName(),
+                    it.desc,
+                    null,
+                    null
+                )
+            )
+        }
+
+        val constructorDesc = "(${
+            methodNode.localVariables?.joinToString("") {
+                it.desc
+            }.orEmpty()
+        })V"
+        println("constructorDesc = $constructorDesc")
         // 创建构造函数
         val constructor = MethodNode(
-            Opcodes.ACC_PUBLIC, "<init>", "(${clazzDesc})V", null, null
+            ACC_PUBLIC, "<init>", constructorDesc, null, null
         )
         constructor.visitCode()
         constructor.visitVarInsn(Opcodes.ALOAD, 0) // 加载this
         constructor.visitMethodInsn(
             Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false
         ) // 调用父类构造函数
-        // 将参数赋值给类的属性
-        constructor.visitVarInsn(Opcodes.ALOAD, 0) // 加载this
-        constructor.visitVarInsn(Opcodes.ALOAD, 1) // 加载第一个参数
-        constructor.visitFieldInsn(
-            Opcodes.PUTFIELD, innerClazzName, "outerClazz", clazzDesc
-        ) // 将参数赋值给属性
+
+        methodNode.localVariables?.forEachIndexed { index, localVariableNode ->
+            // 将参数赋值给类的属性
+            constructor.visitVarInsn(Opcodes.ALOAD, 0) // 加载this
+            constructor.visitVarInsn(Opcodes.ALOAD, index + 1) // 加载第一个参数
+            constructor.visitFieldInsn(
+                Opcodes.PUTFIELD,
+                innerClazzName,
+                localVariableNode.getLocalVarName(),
+                localVariableNode.desc
+            ) // 将参数赋值给属性
+        }
+
         // TODO: 4. 需要根据方法入参，来赋值给类属性 -- 并把入参保存在一个list中
 
 
         constructor.visitInsn(Opcodes.RETURN)
         // TODO: 5. stack, locals 的计算，需要处理一下
-        constructor.visitMaxs(2, 2)
+//        constructor.visitMaxs(
+//            methodNode.localVariables.size + 2,
+//            methodNode.localVariables.size + 2
+//        )
         constructor.visitEnd()
 
         // 创建invoke 方法，并调用固定的方法
         val invokeMethod =
-            MethodNode(Opcodes.ACC_PUBLIC, "invoke", "()V", null, null)
+            MethodNode(ACC_PUBLIC, "invoke", "()V", null, null)
         invokeMethod.visitCode()
-        invokeMethod.visitVarInsn(Opcodes.ALOAD, 0)
-        invokeMethod.visitFieldInsn(
-            Opcodes.GETFIELD, innerClazzName, "outerClazz", clazzDesc
-        )
+
+        methodNode.localVariables?.forEach { localVariableNode ->
+            invokeMethod.visitVarInsn(Opcodes.ALOAD, 0)
+            invokeMethod.visitFieldInsn(
+                Opcodes.GETFIELD,
+                innerClazzName,
+                localVariableNode.getLocalVarName(),
+                localVariableNode.desc
+            )
+        }
+
         // TODO: 6. 其它参数的加载也需要处理一下
         invokeMethod.visitMethodInsn(
-            Opcodes.INVOKEVIRTUAL, clazzName, "${methodNode.name}_hele", methodNode.desc, false
+            Opcodes.INVOKEVIRTUAL,
+            clazzName,
+            methodNode.getReplaceMethodName(),
+            methodNode.desc,
+            false
         )
         invokeMethod.visitInsn(Opcodes.RETURN)
         // TODO: 7. stack, locals 的计算，需要处理一下
-        invokeMethod.visitMaxs(2, 1)
+//        invokeMethod.visitMaxs(
+//            methodNode.localVariables.size + 2,
+//            methodNode.localVariables.size + 2
+//        )
         invokeMethod.visitEnd()
 
         val invokeBridgeMethod = MethodNode(
-            Opcodes.ACC_PUBLIC + Opcodes.ACC_BRIDGE + Opcodes.ACC_SYNTHETIC,
+            ACC_PUBLIC + ACC_BRIDGE + ACC_SYNTHETIC,
             "invoke",
             "()Ljava/lang/Object;",
             null,
@@ -277,7 +329,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
         // Return kotlin.Unit.INSTANCE
         invokeBridgeMethod.visitInsn(Opcodes.ARETURN)
         // TODO: 7. stack, locals 的计算，需要处理一下
-        invokeMethod.visitMaxs(2, 2)
+//        invokeMethod.visitMaxs(2, 2)
         invokeBridgeMethod.visitEnd()
 
         innerClassNode.methods.addAll(listOf(constructor, invokeMethod, invokeBridgeMethod))
