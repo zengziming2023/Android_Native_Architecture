@@ -124,6 +124,8 @@ class MainActivity : ComponentActivity() {
         LoginUtil.login()
         TestPlugin.testLoginRequest()
         TestPlugin.testAfterLogin("has login: go go go..")
+        TestPlugin.testAfterLogin("has login: go go go..", 200)
+
 
         TestPlugin.testThread()
     }

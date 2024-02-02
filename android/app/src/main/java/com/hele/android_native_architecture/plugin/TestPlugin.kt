@@ -49,6 +49,11 @@ object TestPlugin {
         XLog.d(("have login, do something, message:$message"))
     }
 
+    @RequestLogin
+    fun testAfterLogin(message: String, code: Int) {
+        XLog.d(("have login, do something, message:$message, code = $code"))
+    }
+
     fun testThread() {
         TestThread {
             XLog.d("test thread start.")

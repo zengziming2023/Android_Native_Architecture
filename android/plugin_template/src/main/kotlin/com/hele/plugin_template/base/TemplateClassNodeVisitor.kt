@@ -14,6 +14,7 @@ import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Opcodes.ACC_BRIDGE
 import org.objectweb.asm.Opcodes.ACC_FINAL
+import org.objectweb.asm.Opcodes.ACC_PRIVATE
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SUPER
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
@@ -28,6 +29,7 @@ import org.objectweb.asm.tree.MethodInsnNode
 import org.objectweb.asm.tree.MethodNode
 import org.objectweb.asm.tree.TypeInsnNode
 import org.objectweb.asm.tree.VarInsnNode
+import kotlin.math.abs
 
 class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
     ClassNode(TemplatePlugin.getASMVersion()) {
@@ -87,9 +89,9 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
                 // TODO: 7. 这个判断是有问题的，因为一个方法里可能会有多个return，需要优化一下
                 if ((op in Opcodes.IRETURN..Opcodes.RETURN) || op == Opcodes.ATHROW) {
                     // 生成内部类
-                    generateInnerClazz(methodNode)
+                    val innerClazzNode = generateInnerClazz(methodNode)
 
-                    createInnerClazzAndCallLambda(methodNode, it)
+                    createInnerClazzAndCallLambda(methodNode, it, innerClazzNode)
 
                 } else {
                     // 清空原来的逻辑
@@ -107,14 +109,17 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
      * 创建内部类实例，并把实例作为入参，传递给另外一个方法使用
      */
     private fun createInnerClazzAndCallLambda(
-        methodNode: MethodNode, it: AbstractInsnNode?
+        methodNode: MethodNode, oldTailNode: AbstractInsnNode?, innerClazzNode: ClassNode
     ) {
-        val innerClazzName = "$clazzName\$Inner${methodNode.name}"
-        val constructorDesc = "(${
-            methodNode.localVariables?.joinToString("") {
-                it.desc
-            }.orEmpty()
-        })V"
+        val innerClazzName = innerClazzNode.name // "$clazzName\$Inner${methodNode.name}"
+        val constructorDesc = innerClazzNode.methods.firstOrNull {
+            it.name == "<init>"
+        }?.desc
+        /**"(${
+        methodNode.localVariables?.joinToString("") {
+        it.desc
+        }.orEmpty()
+        })V"*/
         println("inner class construct desc = $constructorDesc")
         println("inner class desc = L$innerClazzName;")
         // 创建内部类实例，差把他赋值给一个入参
@@ -125,7 +130,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             methodNode.localVariables?.forEachIndexed { index, localVariableNode ->
                 add(VarInsnNode(localVariableNode.getLoadType(), index))
             }
-            // TODO: 8. 加载的入参 + 构造函数的 desc 需要重新处理一下
+            // 8. 加载的入参 + 构造函数的 desc 需要重新处理一下
             add(
                 MethodInsnNode(
                     Opcodes.INVOKESPECIAL,
@@ -137,7 +142,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 
             val localVarInnerClazz = methodNode.localVariables?.size ?: 0
             println("localVarInnerClazz = $localVarInnerClazz")
-            // TODO: 9. 保存到第几个本地变量中，这理论上需要计算
+            // 9. 保存到第几个本地变量中，这理论上需要计算
             add(VarInsnNode(Opcodes.ASTORE, localVarInnerClazz))
             add(VarInsnNode(Opcodes.ALOAD, 0))
             add(VarInsnNode(Opcodes.ALOAD, localVarInnerClazz))
@@ -153,9 +158,9 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
                 )
             )
         }
-        methodNode.instructions.insertBefore(it, tailInsns)
+        methodNode.instructions.insertBefore(oldTailNode, tailInsns)
 
-        // TODO: 11. maxStack maxLocals 可以自动计算吗？
+        //  11. maxStack maxLocals 可以自动计算吗？
 //        methodNode.maxStack = 3
 //        methodNode.maxLocals = 2
     }
@@ -178,13 +183,14 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
         })
     }
 
-    private fun generateInnerClazz(methodNode: MethodNode) {
+    private fun generateInnerClazz(methodNode: MethodNode): ClassNode {
 //        val clazzThis = methodNode.localVariables[0]
 //        val clazzDesc = clazzThis.desc
 //
 //        println("clazzName = $clazzName, clazzDesc = $clazzDesc")
 
-        val innerClazzName = "$clazzName\$Inner${methodNode.name}"
+        val innerClazzName =
+            "$clazzName\$Inner${methodNode.name}${abs(methodNode.desc.hashCode())}"
 
         val innerClass = InnerClassNode(
             innerClazzName, clazzName, methodNode.name, ACC_PUBLIC
@@ -208,14 +214,14 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 //                Opcodes.ACC_PRIVATE + Opcodes.ACC_FINAL, "outerClazz", clazzDesc, null, null
 //            )
 //        )
-        // TODO: 1. 需要根据methodNode的入参，创建对应内部类的属性
+        // 1. 需要根据methodNode的入参，创建对应内部类的属性
         // TODO: 2. 需要判断methodNode的acces，如果是static的话，则不需要创建outerClazz
-        // TODO: 3. 构造函数的签名，需要根据方法入参来拼接
+        // 3. 构造函数的签名，需要根据方法入参来拼接
 
         methodNode.localVariables?.forEach {
             innerClassNode.fields.add(
                 FieldNode(
-                    Opcodes.ACC_PRIVATE + ACC_FINAL,
+                    ACC_PRIVATE + ACC_FINAL,
                     it.getLocalVarName(),
                     it.desc,
                     null,
@@ -243,7 +249,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
         methodNode.localVariables?.forEachIndexed { index, localVariableNode ->
             // 将参数赋值给类的属性
             constructor.visitVarInsn(Opcodes.ALOAD, 0) // 加载this
-            constructor.visitVarInsn(Opcodes.ALOAD, index + 1) // 加载第一个参数
+            constructor.visitVarInsn(localVariableNode.getLoadType(), index + 1) // 加载第一个参数
             constructor.visitFieldInsn(
                 Opcodes.PUTFIELD,
                 innerClazzName,
@@ -252,11 +258,8 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             ) // 将参数赋值给属性
         }
 
-        // TODO: 4. 需要根据方法入参，来赋值给类属性 -- 并把入参保存在一个list中
-
-
         constructor.visitInsn(Opcodes.RETURN)
-        // TODO: 5. stack, locals 的计算，需要处理一下
+        // 5. stack, locals 的计算，需要处理一下
 //        constructor.visitMaxs(
 //            methodNode.localVariables.size + 2,
 //            methodNode.localVariables.size + 2
@@ -278,7 +281,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             )
         }
 
-        // TODO: 6. 其它参数的加载也需要处理一下
+        // 6. 其它参数的加载也需要处理一下
         invokeMethod.visitMethodInsn(
             Opcodes.INVOKEVIRTUAL,
             clazzName,
@@ -287,7 +290,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             false
         )
         invokeMethod.visitInsn(Opcodes.RETURN)
-        // TODO: 7. stack, locals 的计算，需要处理一下
+        // 7. stack, locals 的计算，需要处理一下
 //        invokeMethod.visitMaxs(
 //            methodNode.localVariables.size + 2,
 //            methodNode.localVariables.size + 2
@@ -328,21 +331,21 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 
         // Return kotlin.Unit.INSTANCE
         invokeBridgeMethod.visitInsn(Opcodes.ARETURN)
-        // TODO: 7. stack, locals 的计算，需要处理一下
+        // 7. stack, locals 的计算，需要处理一下
 //        invokeMethod.visitMaxs(2, 2)
         invokeBridgeMethod.visitEnd()
 
         innerClassNode.methods.addAll(listOf(constructor, invokeMethod, invokeBridgeMethod))
 
         innerClass.accept(innerClassNode)
-        println("innerClassNode.accept(classVisitor)")
+//        println("innerClassNode.accept(classVisitor)")
 //        innerClassNode.accept(classVisitor)
 
         innerClassNode.let {
             val cw = ClassWriter(COMPUTE_FRAMES or COMPUTE_MAXS)
             it.accept(cw)
             val innerClazzByteArray = cw.toByteArray()
-            println("inner clazz byte array = $innerClazzByteArray")
+//            println("inner clazz byte array = $innerClazzByteArray")
             val innerFilePath = "${TemplatePlugin.pathClassesWithAsm}/${innerClazzName}.class"
             println("innerFilePath = $innerFilePath")
             val saveInnerClazzResult = saveByteArrayToFile(
@@ -350,7 +353,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             )
             println("saveInnerClazzResult = $saveInnerClazzResult")
         }
-
+        return innerClassNode
     }
 
     private fun copyInstructions(sourceMethod: MethodNode, targetMethod: MethodNode) {
