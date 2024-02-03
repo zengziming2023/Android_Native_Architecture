@@ -9,6 +9,10 @@ fun MethodNode.getReplaceMethodName(): String {
     return "${name}$REPLACE_METHOD_SUFFIX"
 }
 
+fun MethodNode.isStatic(): Boolean {
+    return (access and ACC_STATIC) != 0
+}
+
 fun LocalVariableNode.getLocalVarName(): String {
     return if (name == "this") {
         "outerClazz"

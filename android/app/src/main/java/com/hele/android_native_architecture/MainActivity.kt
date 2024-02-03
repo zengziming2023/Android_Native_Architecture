@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import com.billy.cc.core.component.CC
 import com.elvishew.xlog.XLog
 import com.hele.android_native_architecture.plugin.TestPlugin
+import com.hele.android_native_architecture.plugin.TestStaticJavaPlugin
+import com.hele.android_native_architecture.plugin.TestStaticPlugin
 import com.hele.android_native_architecture.ui.theme.Android_native_architectureTheme
 import com.hele.android_native_architecture.viewmodel.MainViewModel
 import com.hele.base.annotation.TraceMethod
@@ -126,7 +128,8 @@ class MainActivity : ComponentActivity() {
         TestPlugin.testAfterLogin("has login: go go go..")
         TestPlugin.testAfterLogin("has login: go go go..", 200)
 
-
+        TestStaticPlugin.testStatic("test static..", 200)
+        TestStaticJavaPlugin.testJavaStatic("test java static..", 200)
         TestPlugin.testThread()
     }
 

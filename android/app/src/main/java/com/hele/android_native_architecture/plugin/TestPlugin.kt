@@ -30,14 +30,12 @@ object TestPlugin {
 
     @RequestLogin
     fun testLoginRequest() {
-//        requestLogin {
-        testLambda {
+        requestLogin {
+//        testLambda {
             XLog.d("before login")
             XLog.d("testLoginRequest")
-        }
-
-
 //        }
+        }
     }
 
     fun testLambda(funC: () -> Unit) {

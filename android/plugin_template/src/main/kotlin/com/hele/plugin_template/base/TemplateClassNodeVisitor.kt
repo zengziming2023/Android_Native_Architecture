@@ -4,6 +4,7 @@ import com.hele.plugin_template.TemplatePlugin
 import com.hele.plugin_template.extension.getLoadType
 import com.hele.plugin_template.extension.getLocalVarName
 import com.hele.plugin_template.extension.getReplaceMethodName
+import com.hele.plugin_template.extension.isStatic
 import com.hele.plugin_template.test.saveByteArrayToFile
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
@@ -15,6 +16,7 @@ import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Opcodes.ACC_BRIDGE
 import org.objectweb.asm.Opcodes.ACC_FINAL
 import org.objectweb.asm.Opcodes.ACC_PRIVATE
+import org.objectweb.asm.Opcodes.ACC_PROTECTED
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SUPER
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
@@ -147,12 +149,12 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             add(VarInsnNode(Opcodes.ALOAD, 0))
             add(VarInsnNode(Opcodes.ALOAD, localVarInnerClazz))
 
-            // TODO: 10. 这里应该需要外部配置，
+            // 10. 这里应该需要外部配置，
             add(
                 MethodInsnNode(
-                    Opcodes.INVOKEVIRTUAL,
-                    clazzName,
-                    "testLambda",
+                    Opcodes.INVOKESTATIC,
+                    "com/hele/base/utils/LoginUtilKt",
+                    "requestLogin",
                     "(Lkotlin/jvm/functions/Function0;)V",
                     false
                 )
@@ -169,9 +171,18 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
      * 创建一个新的方法，与methodNode签名一致，强制public，并把原来methodNode的逻辑迁移过来
      */
     private fun createReplaceMethod(methodNode: MethodNode) {
+        // 判断方法的修饰符是否为 private 或 protected
+        val replaceMethodAccess =
+            if (methodNode.access and ACC_PRIVATE != 0 || methodNode.access and ACC_PROTECTED != 0) {
+                // 将 private 或 protected 修改为 public
+                (methodNode.access and (ACC_PRIVATE or ACC_PROTECTED).inv()) or ACC_PUBLIC
+            } else {
+                methodNode.access or ACC_PUBLIC
+            }
+
         methods.add(MethodNode(
             api,
-            ACC_PUBLIC,
+            replaceMethodAccess,
             methodNode.getReplaceMethodName(),
             methodNode.desc,
             methodNode.signature,
@@ -215,7 +226,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
 //            )
 //        )
         // 1. 需要根据methodNode的入参，创建对应内部类的属性
-        // TODO: 2. 需要判断methodNode的acces，如果是static的话，则不需要创建outerClazz
+        // 2. 需要判断methodNode的acces，如果是static的话，则不需要创建outerClazz
         // 3. 构造函数的签名，需要根据方法入参来拼接
 
         methodNode.localVariables?.forEach {
@@ -280,10 +291,11 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
                 localVariableNode.desc
             )
         }
-
+        val opcodeAndSource =
+            if (methodNode.isStatic()) Opcodes.INVOKESTATIC else Opcodes.INVOKEVIRTUAL
         // 6. 其它参数的加载也需要处理一下
         invokeMethod.visitMethodInsn(
-            Opcodes.INVOKEVIRTUAL,
+            opcodeAndSource,
             clazzName,
             methodNode.getReplaceMethodName(),
             methodNode.desc,
