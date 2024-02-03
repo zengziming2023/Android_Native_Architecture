@@ -92,7 +92,7 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
                 if ((op in Opcodes.IRETURN..Opcodes.RETURN) || op == Opcodes.ATHROW) {
                     // 生成内部类
                     val innerClazzNode = generateInnerClazz(methodNode)
-
+                    // 创建内部类实例，并调用LoginUtilKt.requestLogin(new InnerClazz..)
                     createInnerClazzAndCallLambda(methodNode, it, innerClazzNode)
 
                 } else {

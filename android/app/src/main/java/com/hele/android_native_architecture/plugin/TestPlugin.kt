@@ -30,12 +30,12 @@ object TestPlugin {
 
     @RequestLogin
     fun testLoginRequest() {
-        requestLogin {
+//        requestLogin {
 //        testLambda {
-            XLog.d("before login")
-            XLog.d("testLoginRequest")
+        XLog.d("before login")
+        XLog.d("testLoginRequest")
 //        }
-        }
+//        }
     }
 
     fun testLambda(funC: () -> Unit) {
@@ -44,11 +44,14 @@ object TestPlugin {
 
     @RequestLogin
     fun testAfterLogin(message: String) {
+        if (message == "") return
+
         XLog.d(("have login, do something, message:$message"))
     }
 
     @RequestLogin
     fun testAfterLogin(message: String, code: Int) {
+        if (code == 200) return
         XLog.d(("have login, do something, message:$message, code = $code"))
     }
 
@@ -84,10 +87,7 @@ class TestThread : Thread {
     constructor(target: Runnable?, name: String) : super(target, name)
     constructor(group: ThreadGroup?, target: Runnable?, name: String) : super(group, target, name)
     constructor(
-        group: ThreadGroup?,
-        target: Runnable?,
-        name: String,
-        stackSize: Long
+        group: ThreadGroup?, target: Runnable?, name: String, stackSize: Long
     ) : super(group, target, name, stackSize)
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
