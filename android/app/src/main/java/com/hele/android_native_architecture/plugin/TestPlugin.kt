@@ -44,14 +44,20 @@ object TestPlugin {
 
     @RequestLogin
     fun testAfterLogin(message: String) {
-        if (message == "") return
+        if (message == "") {
+            XLog.d(("message is empty, return"))
+            return
+        }
 
         XLog.d(("have login, do something, message:$message"))
     }
 
     @RequestLogin
     fun testAfterLogin(message: String, code: Int) {
-        if (code == 200) return
+        if (code == 200) {
+            XLog.d(("code is 200, return"))
+            return
+        }
         XLog.d(("have login, do something, message:$message, code = $code"))
     }
 

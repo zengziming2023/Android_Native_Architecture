@@ -85,23 +85,44 @@ class TemplateClassNodeVisitor(private val classVisitor: ClassVisitor?) :
             // 创建一个方法
             createReplaceMethod(methodNode)
 
-            methodNode.instructions.forEach {
-                println("insn node: $it, op = ${it.opcode}, type = ${it.type}")
-                val op = it.opcode
-                // TODO: 7. 这个判断是有问题的，因为一个方法里可能会有多个return，需要优化一下
-                if ((op in Opcodes.IRETURN..Opcodes.RETURN) || op == Opcodes.ATHROW) {
-                    // 生成内部类
-                    val innerClazzNode = generateInnerClazz(methodNode)
-                    // 创建内部类实例，并调用LoginUtilKt.requestLogin(new InnerClazz..)
-                    createInnerClazzAndCallLambda(methodNode, it, innerClazzNode)
-
-                } else {
-                    // 清空原来的逻辑
-                    if (it !is LabelNode) {
+            // / 清空原来的逻辑,并且只保留最后一个 return or throw
+            var lastReturnNode: AbstractInsnNode? = null
+            methodNode.instructions.forEach { insnNode ->
+                if (insnNode.opcode in Opcodes.IRETURN..Opcodes.RETURN) {
+                    lastReturnNode?.let {
+                        // 删除上一个return,只保留最后一个return
                         methodNode.instructions.remove(it)
                     }
+                    lastReturnNode = insnNode
+                } else if (insnNode !is LabelNode) {
+                    methodNode.instructions.remove(insnNode)
                 }
             }
+
+            lastReturnNode?.let {
+                // 生成内部类
+                val innerClazzNode = generateInnerClazz(methodNode)
+                // 创建内部类实例，并调用LoginUtilKt.requestLogin(new InnerClazz..)
+                createInnerClazzAndCallLambda(methodNode, it, innerClazzNode)
+            }
+
+//            methodNode.instructions.forEachIndexed { index, insnNode ->
+//                println("insn node: $insnNode, op = ${insnNode.opcode}, type = ${insnNode.type}")
+//                val op = insnNode.opcode
+//                // 7. 这个判断是有问题的，因为一个方法里可能会有多个return，需要优化一下
+//                if ((op in Opcodes.IRETURN..Opcodes.RETURN) || op == Opcodes.ATHROW) {
+//                    // 生成内部类
+//                    val innerClazzNode = generateInnerClazz(methodNode)
+//                    // 创建内部类实例，并调用LoginUtilKt.requestLogin(new InnerClazz..)
+//                    createInnerClazzAndCallLambda(methodNode, insnNode, innerClazzNode)
+//
+//                } else {
+//                    // 清空原来的逻辑
+//                    if (insnNode !is LabelNode) {
+//                        methodNode.instructions.remove(insnNode)
+//                    }
+//                }
+//            }
         }
 
         accept(classVisitor)
