@@ -3,12 +3,9 @@ package com.hele.plugin_template
 import com.android.build.api.instrumentation.FramesComputationMode
 import com.android.build.api.instrumentation.InstrumentationScope
 import com.android.build.api.variant.AndroidComponentsExtension
-import com.hele.plugin_template.base.TemplateASMFactory
-import com.hele.plugin_template.base.TemplateNodeASMFactory
 import com.hele.plugin_template.extension.TemplateExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Opcodes
 
 class TemplatePlugin : Plugin<Project> {
@@ -39,10 +36,10 @@ class TemplatePlugin : Plugin<Project> {
                     TemplateASMFactory::class.java,
                     InstrumentationScope.PROJECT
                 ) {}
-                transformClassesWith(
-                    TemplateNodeASMFactory::class.java,
-                    InstrumentationScope.PROJECT
-                ) {}
+//                transformClassesWith(
+//                    TemplateNodeASMFactory::class.java,
+//                    InstrumentationScope.PROJECT
+//                ) {}
                 setAsmFramesComputationMode(FramesComputationMode.COMPUTE_FRAMES_FOR_INSTRUMENTED_METHODS)
             }
 
