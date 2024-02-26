@@ -1,6 +1,7 @@
 package com.hele.base.ui
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -15,7 +16,8 @@ abstract class BaseActivity<VB : ViewBinding, VM : BaseViewModel> : AppCompatAct
     }
 
     protected val mViewBinding: VB by lazy {
-        (types[0] as Class<*>).getMethod("inflate").invoke(null, layoutInflater) as VB
+        (types[0] as Class<*>).getMethod("inflate", LayoutInflater::class.java)
+            .invoke(null, layoutInflater) as VB
     }
 
     protected val mViewModel: VM by lazy {
