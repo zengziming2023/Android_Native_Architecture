@@ -32,6 +32,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, BaseViewModel>() {
                 })
 
                 setOnClickListener {
+                    cancelAnimation()
+
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                     finish()
                 }
