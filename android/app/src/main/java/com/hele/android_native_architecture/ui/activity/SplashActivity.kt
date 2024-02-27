@@ -6,10 +6,17 @@ import android.content.Intent
 import com.elvishew.xlog.XLog
 import com.hele.android_native_architecture.MainActivity
 import com.hele.android_native_architecture.databinding.ActivitySplashBinding
+import com.hele.android_native_architecture.viewmodel.ShareViewModel
+import com.hele.android_native_architecture.viewmodel.globalSharedViewModel
 import com.hele.base.ui.BaseActivity
 import com.hele.base.viewmodel.BaseViewModel
 
 class SplashActivity : BaseActivity<ActivitySplashBinding, BaseViewModel>() {
+
+    private val shareViewModel by lazy {
+        globalSharedViewModel<ShareViewModel>()
+    }
+
     override fun setUpView() {
         mViewBinding.apply {
             lottieView.apply {
@@ -32,6 +39,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, BaseViewModel>() {
                 })
 
                 setOnClickListener {
+                    XLog.d("shareViewModel = ${shareViewModel.hashCode()}")
+
                     cancelAnimation()
 
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))

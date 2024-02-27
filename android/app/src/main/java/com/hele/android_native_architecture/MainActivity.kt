@@ -18,6 +18,8 @@ import com.hele.android_native_architecture.plugin.TestStaticJavaPlugin
 import com.hele.android_native_architecture.plugin.TestStaticPlugin
 import com.hele.android_native_architecture.ui.theme.Android_native_architectureTheme
 import com.hele.android_native_architecture.viewmodel.MainViewModel
+import com.hele.android_native_architecture.viewmodel.ShareViewModel
+import com.hele.android_native_architecture.viewmodel.globalSharedViewModel
 import com.hele.base.annotation.TraceMethod
 import com.hele.base.utils.LoginUtil
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +34,10 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
     private val mainViewModule: MainViewModel by inject()
 
+    private val shareViewModel by lazy {
+        globalSharedViewModel<ShareViewModel>()
+    }
+
     @TraceMethod
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
+        XLog.d("shareViewModel = ${shareViewModel.hashCode()}")
         testPlugin()
 
         testCC()
