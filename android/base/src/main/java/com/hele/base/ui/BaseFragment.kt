@@ -17,7 +17,8 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     }
 
     protected val mViewBinging: VB by lazy {
-        (types[0] as Class<*>).getMethod("inflate").invoke(null, layoutInflater) as VB
+        (types[0] as Class<*>).getMethod("inflate", LayoutInflater::class.java)
+            .invoke(null, layoutInflater) as VB
     }
 
     protected val mViewModel: VM by lazy {
