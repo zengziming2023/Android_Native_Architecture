@@ -4,7 +4,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.properties.Delegates
 
 class LazyMutableLiveData<T> : MutableLiveData<T> {
-    private var startVersion by Delegates.notNull<Int>()
+    //    private var startVersion by Delegates.notNull<Int>()
+    private val startVersion: Int
 
     constructor() : super() {
         startVersion = version
