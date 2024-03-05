@@ -16,7 +16,13 @@ class MainViewModel : BaseViewModel() {
     private val _mainUIStateLiveData by lazy {
         MutableLiveData(
             MainUIStateData(
-                textClick = { textClick() }
+                textClick = { textClick() },
+                showMyDialog = {
+                    showDialog()
+                },
+                dialogConfirm = {
+                    dismissDialog()
+                }
 
             )
         )
@@ -24,6 +30,22 @@ class MainViewModel : BaseViewModel() {
 
     val mainUIStateLiveData: LiveData<MainUIStateData> by lazy {
         _mainUIStateLiveData
+    }
+
+    private fun showDialog() {
+        _mainUIStateLiveData.value?.copy(
+            showDialog = true
+        )?.let {
+            _mainUIStateLiveData.send(it)
+        }
+    }
+
+    private fun dismissDialog() {
+        _mainUIStateLiveData.value?.copy(
+            showDialog = false
+        )?.let {
+            _mainUIStateLiveData.send(it)
+        }
     }
 
     fun testKoin() {

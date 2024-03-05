@@ -49,6 +49,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberAsyncImagePainter
@@ -93,7 +95,7 @@ class MainActivity : ComponentActivity() {
                     val mainUIStateData by remember {
                         mainUIState
                     }
-                    Greeting(mainUIStateData ?: MainUIStateData())
+                    Greeting2(mainUIStateData ?: MainUIStateData())
                 }
             }
         }
@@ -232,7 +234,7 @@ fun Greeting2(mainUIState: MainUIStateData) {
             Text(text = mainUIState.name)
         }
 
-        Text(text = mainUIState.text, modifier = Modifier
+        Text(text = "show dialog ${mainUIState.text}", modifier = Modifier
             .constrainAs(text1) {
                 top.linkTo(button1.bottom, 8.dp)
                 start.linkTo(button1.start)
@@ -240,7 +242,7 @@ fun Greeting2(mainUIState: MainUIStateData) {
             .background(Color.Red)
             .padding(8.dp)
             .clickable {
-
+                mainUIState.showMyDialog()
             }
         )
 
@@ -254,7 +256,12 @@ fun Greeting2(mainUIState: MainUIStateData) {
                 }
                 .width(60.dp)
         )
+    }
 
+    if (mainUIState.showDialog) {
+        myDialog(title = "My Dialog Title", content = "My Dialog Content") {
+            mainUIState.dialogConfirm()
+        }
     }
 }
 
@@ -386,7 +393,55 @@ fun GreetingPreview() {
 @Composable
 fun Greeting2Preview() {
     Android_native_architectureTheme {
-        Greeting2(MainUIStateData("Android Compose"))
+        Greeting2(MainUIStateData("Android Compose", showDialog = true))
+    }
+}
+
+@Composable
+fun myDialog(title: String, content: String, onConfirm: () -> Unit) {
+    Dialog(
+        onDismissRequest = { }, properties = DialogProperties(
+            dismissOnClickOutside = false,
+            dismissOnBackPress = false
+        )
+    ) {
+        ConstraintLayout(
+            modifier = Modifier
+                .background(
+                    Color.Blue, RoundedCornerShape(8.dp)
+                )
+                .padding(16.dp)
+        ) {
+            val (tvTitle, tvContent, btnConfirm) = createRefs()
+            Text(
+                text = title, modifier = Modifier.constrainAs(tvTitle) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                },
+                color = Color.White
+            )
+            Text(text = content, modifier = Modifier.constrainAs(tvContent) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(tvTitle.bottom, 8.dp)
+            }, color = Color.Red)
+            Button(onClick = { onConfirm() }, modifier = Modifier.constrainAs(btnConfirm) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(tvContent.bottom, 8.dp)
+
+            }) {
+                Text(text = "Confirm")
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun myDialogPreview() {
+    myDialog(title = "Dialog Title", content = "Dialog Content") {
+
     }
 }
 
