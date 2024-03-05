@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.billy.cc.core.component.CC
 import com.elvishew.xlog.XLog
 import com.hele.android_native_architecture.plugin.TestPlugin
@@ -247,6 +250,7 @@ fun Greeting(mainUIState: MainUIStateData) {
                 text = "Hello ${mainUIState.text}",
                 modifier = Modifier
                     .padding(8.dp)
+                    .fillMaxWidth()
                     .clickable {
                         mainUIState.textClick()
                     },
@@ -269,6 +273,22 @@ fun Greeting(mainUIState: MainUIStateData) {
                 .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
         )
         EditText()
+        Spacer(modifier = Modifier.height(8.dp))
+        Image(
+            painter = rememberAsyncImagePainter(
+                model = "https://th.bing.com/th/id/R.1395d1b17397018e6916784c283a14f2?rik=bmfmSW7odc2D1A&pid=ImgRaw&r=0",
+                placeholder = painterResource(id = R.drawable.ic_launcher_background),
+                error = painterResource(id = R.drawable.ic_launcher_foreground),
+
+            ),
+            contentDescription = "remote image",
+            contentScale = ContentScale.Crop, //FillBounds,
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .fillMaxWidth()
+//                .width((375 / 2).dp)
+                .height(100.dp)
+        )
     }
 
 }
@@ -282,7 +302,7 @@ private fun EditText() {
 
     TextField(value = text11, onValueChange = {
         text11 = it
-    })
+    }, Modifier.background(Color.Transparent))
 }
 
 @Preview(showBackground = true)

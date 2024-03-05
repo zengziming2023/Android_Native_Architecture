@@ -74,7 +74,9 @@ ext {
             jsBridge           : "com.github.lzyzsd:jsbridge:2.0.0",
 
             lottie             : "com.airbnb.android:lottie:6.3.0",
-            composeLiveData    : "androidx.compose.runtime:runtime-livedata:1.6.0"
+            composeLiveData    : "androidx.compose.runtime:runtime-livedata:1.6.0",
+
+            coilCompose        : "io.coil-kt:coil-compose:2.6.0"
     ]
 
     plugin = [
