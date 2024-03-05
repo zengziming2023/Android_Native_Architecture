@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -34,10 +34,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign
@@ -47,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.billy.cc.core.component.CC
 import com.elvishew.xlog.XLog
 import com.hele.android_native_architecture.plugin.TestPlugin
@@ -213,7 +216,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(mainUIState: MainUIStateData) {
     Column(modifier = Modifier.padding(8.dp)) {
-
+        val focusManager = LocalFocusManager.current
         Text(
             text = "Hello ${mainUIState.name}! 丝丝xxxxxxxxx\nxxx\nx",
             maxLines = 2,
@@ -271,7 +274,12 @@ fun Greeting(mainUIState: MainUIStateData) {
                 .background(colorResource(id = R.color.purple_200))
                 .size(width = 80.dp, height = 80.dp)
                 .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                .clickable {
+                    val success = focusManager.clearFocus(true)
+                    XLog.d("free focus result: $success")
+                }
         )
+        EditText()
         EditText()
         Spacer(modifier = Modifier.height(8.dp))
         Image(
@@ -280,7 +288,7 @@ fun Greeting(mainUIState: MainUIStateData) {
                 placeholder = painterResource(id = R.drawable.ic_launcher_background),
                 error = painterResource(id = R.drawable.ic_launcher_foreground),
 
-            ),
+                ),
             contentDescription = "remote image",
             contentScale = ContentScale.Crop, //FillBounds,
             modifier = Modifier
@@ -297,12 +305,28 @@ fun Greeting(mainUIState: MainUIStateData) {
 @Composable
 private fun EditText() {
     var text11: String by remember {
-        mutableStateOf("")
+        mutableStateOf("edit text")
     }
 
-    TextField(value = text11, onValueChange = {
-        text11 = it
-    }, Modifier.background(Color.Transparent))
+    TextField(
+        value = text11,
+        onValueChange = {
+            text11 = it
+        },
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 100.dp),
+        textStyle = TextStyle(
+            color = Color.Red, fontSize = 28.sp, fontWeight = Bold,
+            textAlign = TextAlign.Center
+        ),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            focusedIndicatorColor = Color.Red
+        ),
+    )
 }
 
 @Preview(showBackground = true)
