@@ -1,6 +1,9 @@
 package com.hele.android_native_architecture.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.elvishew.xlog.XLog
+import com.hele.base.utils.send
 import com.hele.base.viewmodel.BaseViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -9,6 +12,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
 class MainViewModel : BaseViewModel() {
+
+    private val _mainUIStateLiveData by lazy {
+        MutableLiveData(
+            MainUIStateData(
+                textClick = { textClick() }
+
+            )
+        )
+    }
+
+    val mainUIStateLiveData: LiveData<MainUIStateData> by lazy {
+        _mainUIStateLiveData
+    }
 
     fun testKoin() {
         XLog.d("testKoin this.hashCode = ${this.hashCode()}")
@@ -38,5 +54,15 @@ class MainViewModel : BaseViewModel() {
     }
 
     fun testFlow4() = ::testFlow3.asFlow()
+
+    private fun textClick() {
+        _mainUIStateLiveData.value?.let {
+            it.copy(
+                text = "${it.text} 1"
+            )
+        }?.let {
+            _mainUIStateLiveData.send(it)
+        }
+    }
 
 }

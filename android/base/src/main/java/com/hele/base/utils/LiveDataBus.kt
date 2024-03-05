@@ -1,5 +1,6 @@
 package com.hele.base.utils
 
+import android.os.Looper
 import androidx.lifecycle.LazyMutableLiveData
 import androidx.lifecycle.MutableLiveData
 
@@ -15,5 +16,13 @@ object LiveDataBus {
 
     fun <T> with(key: String, default: T): MutableLiveData<T> {
         return bus.getOrPut(key) { LazyMutableLiveData(default) } as MutableLiveData<T>
+    }
+}
+
+fun <T> MutableLiveData<T>.send(data: T) {
+    if (Looper.getMainLooper() == Looper.myLooper()) {
+        value = data
+    } else {
+        postValue(data)
     }
 }
