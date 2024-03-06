@@ -1,14 +1,25 @@
 package com.hele.android_native_architecture.ui.activity
 
+import android.os.Bundle
 import androidx.viewbinding.ViewBinding
+import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.hele.android_native_architecture.ui.controller.base.BaseTypedEpoxyController
 import com.hele.base.ui.BaseActivity
 import com.hele.base.viewmodel.BaseViewModel
 
-@Route(path = "base/routerA")
+@Route(path = "/base/routerA")
 class ArouterTestActivity : BaseActivity<ViewBinding, BaseViewModel>() {
+
+    @JvmField
+    @Autowired(name = "data")
+    var data: String = ""
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ARouter.getInstance().inject(this)
+        super.onCreate(savedInstanceState)
+    }
 
     private val controller by lazy {
         object : BaseTypedEpoxyController<Any>() {

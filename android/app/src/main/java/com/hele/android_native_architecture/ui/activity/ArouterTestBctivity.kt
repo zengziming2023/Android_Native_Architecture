@@ -5,7 +5,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.hele.base.ui.BaseActivity
 import com.hele.base.viewmodel.BaseViewModel
 
-@Route(path = "base/routerB")
+@Route(path = "/base/routerB")
 class ArouterTestBctivity : BaseActivity<ViewBinding, BaseViewModel>() {
     override fun setUpView() {
     }
