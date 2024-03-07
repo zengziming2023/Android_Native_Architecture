@@ -32,8 +32,13 @@
         </activity>
 
         <activity
+            android:name=".FragMainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <activity
             android:name=".h5.H5BrowserActivity"
-            android:process=":h5" />
+            android:process=":h5"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

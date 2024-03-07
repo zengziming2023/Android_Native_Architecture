@@ -1,5 +1,6 @@
 package com.hele.android_native_architecture
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -95,7 +96,9 @@ class MainActivity : ComponentActivity() {
                     val mainUIStateData by remember {
                         mainUIState
                     }
-                    Greeting2(mainUIStateData ?: MainUIStateData())
+                    Greeting2(mainUIStateData ?: MainUIStateData()) {
+                        startActivity(Intent(this, FragMainActivity::class.java))
+                    }
                 }
             }
         }
@@ -217,14 +220,16 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting2(mainUIState: MainUIStateData) {
+fun Greeting2(mainUIState: MainUIStateData, btnClick: () -> Unit = {}) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Blue, RoundedCornerShape(8.dp))
     ) {
         val (text1, button1, image1) = createRefs()
-        Button(onClick = {}, modifier = Modifier
+        Button(onClick = {
+            btnClick()
+        }, modifier = Modifier
             .constrainAs(button1) {
                 top.linkTo(parent.top, margin = 8.dp)
                 start.linkTo(parent.start)
@@ -266,7 +271,7 @@ fun Greeting2(mainUIState: MainUIStateData) {
 }
 
 @Composable
-fun Greeting(mainUIState: MainUIStateData) {
+fun Greeting(mainUIState: MainUIStateData, imageClick: () -> Unit = {}) {
     Column(modifier = Modifier.padding(8.dp)) {
         val focusManager = LocalFocusManager.current
         Text(
@@ -329,6 +334,7 @@ fun Greeting(mainUIState: MainUIStateData) {
                 .clickable {
                     val success = focusManager.clearFocus(true)
                     XLog.d("free focus result: $success")
+                    imageClick()
                 }
         )
         EditText()
