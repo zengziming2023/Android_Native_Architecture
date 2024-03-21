@@ -16,7 +16,7 @@ object ReplaceClazzManager {
             replaceClassMap[it]?.takeIf {
                 it != curClazzName
             }?.apply {
-                println("replace super clazz: $oldSuperClazz to $this")
+//                println("replace super clazz: $oldSuperClazz to $this")
             } ?: it
         }
     }

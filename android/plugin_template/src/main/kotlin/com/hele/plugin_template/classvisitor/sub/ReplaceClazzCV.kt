@@ -22,6 +22,9 @@ class ReplaceClazzCV(nextClassVisitor: ClassVisitor) : BaseClassVisitor(nextClas
         // change classA extend Thread
         // to classA extend BaseThread
         val replaceSuperClazzName = ReplaceClazzManager.replaceSuperClass(name, superName)
+        if(replaceSuperClazzName != superName){
+            println("visit replace super clazz: $superName to $replaceSuperClazzName")
+        }
         shouldReplaySuperClazz = replaceSuperClazzName != superName
         // 处理继承extends的场景
         super.visit(version, access, name, signature, replaceSuperClazzName, interfaces)

@@ -1,0 +1,103 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.hele.plugin",
+    "module": "template",
+    "version": "1.0.0-SNAPSHOT",
+    "attributes": {
+      "org.gradle.status": "integration"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.2"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.9.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "template-1.0.0-SNAPSHOT.jar",
+          "url": "template-1.0.0-SNAPSHOT.jar",
+          "size": 57363,
+          "sha512": "07e4346da89cd492e0aa04bcd8705bad9604ec8b0381f022d467d9c46563c28c9d9b24d9c5f1d33726a3f6518a5a70f2a89e06a5bc38ce9fdbc30be499403b8b",
+          "sha256": "e71dd7166429a721f0286da01f59734589d3c8921831a231197ccc1a1fdb272e",
+          "sha1": "f1292ee2c093fba3bb8b9dd946fcf856d6a57f3e",
+          "md5": "a43f047092c0cc3dc625447f9dc5a469"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.ow2.asm",
+          "module": "asm",
+          "version": {
+            "requires": "9.2"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-util",
+          "version": {
+            "requires": "9.2"
+          }
+        },
+        {
+          "group": "org.ow2.asm",
+          "module": "asm-commons",
+          "version": {
+            "requires": "9.2"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.9.10"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "template-1.0.0-SNAPSHOT.jar",
+          "url": "template-1.0.0-SNAPSHOT.jar",
+          "size": 57363,
+          "sha512": "07e4346da89cd492e0aa04bcd8705bad9604ec8b0381f022d467d9c46563c28c9d9b24d9c5f1d33726a3f6518a5a70f2a89e06a5bc38ce9fdbc30be499403b8b",
+          "sha256": "e71dd7166429a721f0286da01f59734589d3c8921831a231197ccc1a1fdb272e",
+          "sha1": "f1292ee2c093fba3bb8b9dd946fcf856d6a57f3e",
+          "md5": "a43f047092c0cc3dc625447f9dc5a469"
+        }
+      ]
+    }
+  ]
+}

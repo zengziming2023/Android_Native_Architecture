@@ -21,6 +21,9 @@ class ReplaceSuperClazzMV(
         // to BaseThread super()
         if ("<init>" == name) {
             val replaceName = ReplaceClazzManager.replaceSuperClass(className, owner)
+            if (replaceName != className) {
+                println("init replace super clazz: $className to $replaceName")
+            }
             mv.visitMethodInsn(opcode, replaceName, name, descriptor, isInterface)
             return
         }
