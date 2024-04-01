@@ -65,6 +65,8 @@ import com.hele.android_native_architecture.viewmodel.MainUIStateData
 import com.hele.android_native_architecture.viewmodel.MainViewModel
 import com.hele.android_native_architecture.viewmodel.ShareViewModel
 import com.hele.android_native_architecture.viewmodel.globalSharedViewModel
+import com.hele.annotation_template.Greeting
+import com.hele.annotation_template.GreetingAutoWired
 import com.hele.base.annotation.TraceMethod
 import com.hele.base.utils.LoginUtil
 import kotlinx.coroutines.Dispatchers
@@ -76,13 +78,21 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 
-@com.hele.annotation_template.Greeting(message = "Hello, world", code = 200)
+@Greeting(name = "Hello, MyMainActivity...", age = 20)
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by inject()
 
     private val shareViewModel by lazy {
         globalSharedViewModel<ShareViewModel>()
     }
+
+    @JvmField
+    @GreetingAutoWired
+    var name: String? = null
+
+    @JvmField
+    @GreetingAutoWired
+    var age: Int? = null
 
     @TraceMethod
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -173,6 +183,10 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+
+//        MainActivity_generate().handle()
+        MainActivity_generate.bind(this)
+        XLog.d("name = $name, age = $age")
     }
 
     private fun testPlugin() {
