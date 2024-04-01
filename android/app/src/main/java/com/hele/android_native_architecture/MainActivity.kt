@@ -76,6 +76,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 
+@com.hele.annotation_template.Greeting(message = "Hello, world", code = 200)
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by inject()
 

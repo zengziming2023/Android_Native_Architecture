@@ -77,7 +77,9 @@ ext {
             composeLiveData        : "androidx.compose.runtime:runtime-livedata:1.6.0",
 
             coilCompose            : "io.coil-kt:coil-compose:2.6.0",
-            constraintlayoutCompose: "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+            constraintlayoutCompose: "androidx.constraintlayout:constraintlayout-compose:1.0.1",
+            kspProcessing          : "com.google.devtools.ksp:symbol-processing-api:1.9.10-1.0.13",
+            kotlinPeot             : "com.squareup:kotlinpoet:1.7.1"
     ]
 
     plugin = [

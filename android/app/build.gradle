@@ -6,6 +6,7 @@ plugins {
 //    id 'com.hele.testplugin'
 //    id 'com.dorongold.task-tree'
     id 'PluginTemplate'
+    id 'com.google.devtools.ksp'
 }
 
 kapt {
@@ -13,6 +14,10 @@ kapt {
         arg("AROUTER_MODULE_NAME", project.getName())
     }
 }
+
+//ksp {
+//    arg("ksp.version", "1.9.10-1.0.13")
+//}
 
 pluginExtension {
     enable true
@@ -145,6 +150,10 @@ dependencies {
         }
     }
 //    }
+
+    implementation(project(":annotation_template"))
+    implementation(project(":ksp_template"))
+    ksp(project(":ksp_template"))
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
