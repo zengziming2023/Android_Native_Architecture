@@ -24,3 +24,7 @@ subprojects {
 //    apply from: "${project.rootDir}/cc-settings-2.gradle"
 }
 
+ext {
+    CC_DEMO_RUN_AS_APP = false
+}
+

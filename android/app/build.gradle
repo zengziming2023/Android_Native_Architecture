@@ -107,6 +107,9 @@ android {
 dependencies {
     implementation project(":base")
     implementation project(":webview")
+    if (!CC_DEMO_RUN_AS_APP) {
+        implementation project(":ccDemo")
+    }
 
     implementation app_impl.core
     implementation app_impl.lifecycle
@@ -124,6 +127,9 @@ dependencies {
     implementation app_impl.cc
 
     kapt app_impl.epoxyKapt
+
+    implementation(app_impl.autoService)
+    kapt(app_impl.autoService)
 
     implementation app_impl.epic
 

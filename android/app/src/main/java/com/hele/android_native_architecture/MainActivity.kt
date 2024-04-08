@@ -81,6 +81,7 @@ import org.koin.android.ext.android.inject
 
 @Greeting(name = "Hello, MyMainActivity...", age = 20)
 class MainActivity : ComponentActivity() {
+
     private val mainViewModel: MainViewModel by inject()
 
     private val shareViewModel by lazy {
@@ -205,27 +206,41 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun testCC() {
-        // 同步调用
-        val result = CC.obtainBuilder("ComponentTest").setActionName("toast").build().call()
-
-        // 异步调用，不需要回调
-        val callId = CC.obtainBuilder("ComponentTest").setActionName("toast")
-//            .addParam()   // 入参
-            .build().callAsync()
+//        // 同步调用
+//        val result = CC.obtainBuilder("ComponentTest").setActionName("toast")
+//            .setParams(mapOf("key1" to "value1"))
+//            .build().call()
+//
+//        // 异步调用，不需要回调
+//        val callId = CC.obtainBuilder("ComponentTest").setActionName("toast")
+////            .addParam()   // 入参
+//            .setParams(mapOf("key1" to "value1"))
+//            .addParam("key2", "value2")
+//            .build().callAsync()
 
         // 异步调用，需要回调
-        val callId2 = CC.obtainBuilder("ComponentTest").setActionName("toast")
+        val callId2 = CC.obtainBuilder("ComponentTest").setActionName("toastAsync")
 //            .addParam()   // 入参
+            .addParam("key3", "value3")
             .build().callAsync { cc, result ->
                 // 回调在子线程中
-                XLog.d("", "$result")
+                XLog.d("result = $result")
             }
+        XLog.d("callId2 = $callId2")
 
         // 异步调用，主线程回调
-        val callId3 = CC.obtainBuilder("ComponentTest").setActionName("toast")
+//        val callId3 = CC.obtainBuilder("ComponentTest").setActionName("toast")
+////            .addParams()
+//            .addParam("key4", "value4")
+//            .build().callAsyncCallbackOnMainThread { cc, result ->
+//                XLog.d(TAG, "result = $result")
+//            }
+
+        val callId4 = CC.obtainBuilder("CcDemoComponent").setActionName("toast")
 //            .addParams()
-            .build().callAsyncCallbackOnMainThread { cc, result ->
-                XLog.d("", "$result")
+            .addParam("key5", "value5")
+            .build().callAsync { cc, result ->
+                XLog.d("cc demo result = $result")
             }
     }
 

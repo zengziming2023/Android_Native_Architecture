@@ -1,0 +1,73 @@
+plugins {
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+if (CC_DEMO_RUN_AS_APP) {
+    println("CC_DEMO_RUN_AS_APP true")
+    apply {
+        plugin('com.android.application')
+    }
+} else {
+    println("CC_DEMO_RUN_AS_APP false")
+    apply {
+        plugin('com.android.library')
+    }
+}
+
+android {
+    namespace 'com.hele.ccdemo'
+    compileSdk app_android.compileSdk
+
+    defaultConfig {
+        if (CC_DEMO_RUN_AS_APP) {
+            applicationId "com.hele.ccdemo"
+            sourceSets {
+                main {
+                    java.srcDirs 'src/main/java', 'src/main/debug/java'
+                    manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+                    res.srcDirs 'src/main/res', 'src/main/debug/res'
+                }
+            }
+        }
+
+        minSdk app_android.minSdk
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    resourcePrefix "ccdemo_"
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+        buildConfig true
+    }
+}
+
+dependencies {
+    implementation project(":base")
+    implementation app_impl.cc
+
+    implementation(app_impl.autoService)
+    kapt(app_impl.autoService)
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
