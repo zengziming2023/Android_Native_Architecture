@@ -79,7 +79,9 @@ ext {
             coilCompose            : "io.coil-kt:coil-compose:2.6.0",
             constraintlayoutCompose: "androidx.constraintlayout:constraintlayout-compose:1.0.1",
             kspProcessing          : "com.google.devtools.ksp:symbol-processing-api:1.9.10-1.0.13",
-            kotlinPeot             : "com.squareup:kotlinpoet:1.7.1"
+            kotlinPeot             : "com.squareup:kotlinpoet:1.7.1",
+
+            coil                   : "io.coil-kt:coil:2.6.0"
     ]
 
     plugin = [

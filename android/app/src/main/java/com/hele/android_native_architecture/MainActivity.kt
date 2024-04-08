@@ -54,6 +54,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.lifecycleScope
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.billy.cc.core.component.CC
 import com.elvishew.xlog.XLog
@@ -241,7 +242,7 @@ fun Greeting2(mainUIState: MainUIStateData, btnClick: () -> Unit = {}) {
             .fillMaxSize()
             .background(Color.Blue, RoundedCornerShape(8.dp))
     ) {
-        val (text1, button1, image1) = createRefs()
+        val (text1, button1, image1, image2) = createRefs()
         Button(onClick = {
             btnClick()
         }, modifier = Modifier
@@ -275,6 +276,22 @@ fun Greeting2(mainUIState: MainUIStateData, btnClick: () -> Unit = {}) {
                     start.linkTo(button1.end)
                 }
                 .width(60.dp)
+        )
+
+        AsyncImage(
+            model = "https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png",
+            contentDescription = null,
+            placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+            modifier = Modifier
+                .clip(CircleShape)
+                .size(80.dp)
+                .background(colorResource(id = R.color.purple_200))
+                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
+                .padding(top = 8.dp)
+                .constrainAs(image2) {
+                    top.linkTo(image1.bottom, 8.dp)
+                    start.linkTo(parent.start, 8.dp)
+                }
         )
     }
 
@@ -352,6 +369,7 @@ fun Greeting(mainUIState: MainUIStateData, imageClick: () -> Unit = {}) {
                     imageClick()
                 }
         )
+
         EditText()
         EditText()
         Spacer(modifier = Modifier.height(8.dp))

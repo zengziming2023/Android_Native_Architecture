@@ -55,6 +55,7 @@ dependencies {
     api(app_impl.converterGson)
     implementation(app_impl.mmkv)
     implementation(app_impl.glide)
+    implementation(app_impl.coil)
 
     api(app_impl.room)
     api(app_impl.room_ktx)
