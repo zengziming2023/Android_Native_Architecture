@@ -57,7 +57,9 @@ import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.billy.cc.core.component.CC
+import com.billy.cc.core.component.remote.RemoteConnection
 import com.elvishew.xlog.XLog
+import com.hele.android_native_architecture.di.DaggerViewModelComponent
 import com.hele.android_native_architecture.plugin.TestPlugin
 import com.hele.android_native_architecture.plugin.TestStaticJavaPlugin
 import com.hele.android_native_architecture.plugin.TestStaticPlugin
@@ -77,16 +79,28 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
+import javax.inject.Inject
 
 
 @Greeting(name = "Hello, MyMainActivity...", age = 20)
 class MainActivity : ComponentActivity() {
 
-    private val mainViewModel: MainViewModel by inject()
-
+    private val mainViewModel by inject<MainViewModel>()
+    private val mainViewModel2 by viewModel<MainViewModel>()
+    private val mainViewModel3 by inject<MainViewModel>(named(""))
     private val shareViewModel by lazy {
         globalSharedViewModel<ShareViewModel>()
     }
+
+    @JvmField
+    @Inject
+    var mainViewModel4: MainViewModel? = null
+
+    @JvmField
+    @Inject
+    var mainViewModel5: MainViewModel? = null
 
     @JvmField
     @GreetingAutoWired
@@ -99,6 +113,11 @@ class MainActivity : ComponentActivity() {
     @TraceMethod
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        XLog.d("mainViewModel = $mainViewModel")
+        DaggerViewModelComponent.create().injectMainActivity(this)
+        XLog.d("mainViewModel4 = $mainViewModel4")
+        XLog.d("mainViewModel5 = $mainViewModel5")
+
         setContent {
             Android_native_architectureTheme {
                 // A surface container using the 'background' color from the theme
@@ -187,8 +206,12 @@ class MainActivity : ComponentActivity() {
         }
 
 //        MainActivity_generate().handle()
-        MainActivity_generate.bind(this)
+//        MainActivity_generate.bind(this)
         XLog.d("name = $name, age = $age")
+
+        RemoteConnection.scanComponentApps().let {
+            XLog.d("scanComponentApps = ${it.joinToString()}")
+        }
     }
 
     private fun testPlugin() {

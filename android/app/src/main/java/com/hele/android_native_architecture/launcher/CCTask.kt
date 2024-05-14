@@ -3,10 +3,12 @@ package com.hele.android_native_architecture.launcher
 import com.billy.cc.core.component.CC
 import com.billy.cc.core.component.IDynamicComponent
 import com.elvishew.xlog.XLog
+import com.google.auto.service.AutoService
 import com.hele.android_native_architecture.BuildConfig
 import com.hele.base.launcher.task.Task
 import java.util.ServiceLoader
 
+@AutoService(Task::class)
 class CCTask : Task() {
     override fun isRunOnMainThread(): Boolean = false
 

@@ -1,15 +1,16 @@
 package com.hele.android_native_architecture.launcher
 
+import android.app.Application
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.auto.service.AutoService
+import com.hele.base.extensions.applicationContext
 import com.hele.base.launcher.task.Task
-import com.kingja.loadsir.callback.ProgressCallback
-import com.kingja.loadsir.core.LoadSir
 
 @AutoService(Task::class)
-class LoadSirTask : Task() {
+class ARouterTask : Task() {
     override fun isRunOnMainThread(): Boolean = false
 
     override fun run() {
-        LoadSir.beginBuilder().addCallback(ProgressCallback.Builder().build())
+        ARouter.init(applicationContext() as Application)
     }
 }

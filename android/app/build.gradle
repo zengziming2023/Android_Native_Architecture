@@ -135,6 +135,12 @@ dependencies {
 
     implementation app_impl.koin
 
+    implementation app_impl.dagger
+    kapt(app_impl.dagger_compiler)
+//    implementation(app_impl.dagger_android)
+//    implementation(app_impl.dagger_android_support)
+//    kapt(app_impl.dagger_android_processor)
+
     implementation app_impl.loadsir
 
     implementation app_impl.lottie
@@ -161,6 +167,11 @@ dependencies {
     implementation(project(":annotation_template"))
     implementation(project(":ksp_template"))
     ksp(project(":ksp_template"))
+
+    debugImplementation(app_impl.leakcanary)
+
+    implementation(app_impl.autoService)
+    kapt(app_impl.autoService)
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -40,6 +40,26 @@
             android:name=".h5.H5BrowserActivity"
             android:process=":h5"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".ui.activity.ArouterTestActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".ui.activity.ArouterTestBctivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name="com.billy.cc.core.component.remote.RemoteConnectionActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":testCC"
+            android:taskAffinity="com.billy.cc.connection"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="action.com.billy.cc.connection" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
