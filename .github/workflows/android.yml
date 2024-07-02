@@ -46,7 +46,7 @@ jobs:
         ls -la
 
     - name: Build with Gradle
-      run: ./gradlew assemble${{ github.event.inputs.mode }}
+      run: ./gradlew assemble${{ github.event.inputs.mode } --stacktrace}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2

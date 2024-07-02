@@ -6,7 +6,7 @@ pluginManagement {
         }
         maven {
             allowInsecureProtocol(true)
-            url uri('./localMaven')
+            url uri('localMaven')
         }
 
         maven {
