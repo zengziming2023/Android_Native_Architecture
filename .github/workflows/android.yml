@@ -16,11 +16,11 @@ on:
       mode:
         description: 'Build mode (debug or release)'
         required: true
-        default: 'Debug'
+        default: 'debug'
         type: choice
         options:
-          - Debug
-          - Release
+          - debug
+          - release
 
 jobs:
   build:
@@ -46,7 +46,10 @@ jobs:
         ls -la
 
     - name: Build with Gradle
-      run: ./gradlew assemble${{ github.event.inputs.mode }} --stacktrace
+      run:
+        MODE=${{ github.event.inputs.mode }}
+        MODE_CAPITALIZED=$(echo "${MODE:0:1}" | tr '[:lower:]' '[:upper:]')${MODE:1}
+        ./gradlew assemble$MODE_CAPITALIZED --stacktrace
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
