@@ -25,6 +25,6 @@ subprojects {
 }
 
 ext {
-    CC_DEMO_RUN_AS_APP = true
+    CC_DEMO_RUN_AS_APP = false
 }
 
