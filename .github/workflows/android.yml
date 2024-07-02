@@ -16,11 +16,11 @@ on:
       mode:
         description: 'Build mode (debug or release)'
         required: true
-        default: 'debug'
+        default: 'Debug'
         type: choice
         options:
-          - debug
-          - release
+          - Debug
+          - Release
 
 jobs:
   build:
@@ -40,23 +40,24 @@ jobs:
     - name: Install Android SDK
       uses: android-actions/setup-android@v2
 
-    - name: Determine Build Mode
-      id: build-mode
-      run: echo "::set-output name=mode::${{ github.event.inputs.mode }}"
+    - name: Verify Directory
+      run: |
+        echo "Current directory: $(pwd)"
+        ls -la
 
     - name: Build with Gradle
-      run: ./gradlew assemble${{ steps.build-mode.outputs.mode }}
+      run: ./gradlew assemble${{ github.event.inputs.mode }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: app-${{ steps.build-mode.outputs.mode }}
-        path: app/build/outputs/apk/${{ steps.build-mode.outputs.mode }}/*.apk
+        name: app-${{ github.event.inputs.mode }}
+        path: app/build/outputs/apk/${{ github.event.inputs.mode }}/*.apk
 
     - name: Send Slack Notification
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       run: |
         curl -X POST -H 'Content-type: application/json' --data \
-        '{"text":"Build for branch ${{ github.event.inputs.branch }} in ${{ steps.build-mode.outputs.mode }} mode is complete."}' \
+        '{"text":"Build for branch ${{ github.event.inputs.branch }} in ${{ github.event.inputs.mode }} mode is complete."}' \
         $SLACK_WEBHOOK_URL
