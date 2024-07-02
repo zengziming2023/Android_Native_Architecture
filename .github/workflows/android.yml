@@ -46,7 +46,7 @@ jobs:
         ls -la
 
     - name: Build with Gradle
-      run:
+      run: |
         echo "Building with mode ./gradlew assemble${{ github.event.inputs.mode }}  --stacktrace"
         ./gradlew assemble${{ github.event.inputs.mode }}  --stacktrace
 
