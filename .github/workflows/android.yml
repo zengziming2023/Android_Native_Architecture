@@ -47,9 +47,8 @@ jobs:
 
     - name: Build with Gradle
       run:
-        MODE=${{ github.event.inputs.mode }}
-        MODE_CAPITALIZED=$(echo "${MODE:0:1}" | tr '[:lower:]' '[:upper:]')${MODE:1}
-        ./gradlew assemble$MODE_CAPITALIZED --stacktrace
+        echo "Building with mode ./gradlew assemble${{ github.event.inputs.mode }}  --stacktrace"
+        ./gradlew assemble${{ github.event.inputs.mode }}  --stacktrace
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
