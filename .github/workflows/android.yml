@@ -1,11 +1,11 @@
 name: Android CI
 
 on:
-  push:
-    branches:
-      - main
-      - 'release/**'
-      - 'debug/**'
+#  push:
+#    branches:
+#      - main
+#      - 'release/**'
+#      - 'debug/**'
   workflow_dispatch:
     inputs:
       branch:
@@ -46,7 +46,7 @@ jobs:
         ls -la
 
     - name: Build with Gradle
-      run: ./gradlew assemble${{ github.event.inputs.mode } --stacktrace}
+      run: ./gradlew assemble${{ github.event.inputs.mode }} --stacktrace
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
